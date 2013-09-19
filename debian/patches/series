@@ -40,3 +40,5 @@ sipwise/path_second_parameter.patch
 sipwise/modules-usrloc-use-6th-param-to-set-the-contact-path.patch
 sipwise/utils-kamctl-Add-contact-path-parameter.patch
 sipwise/url-safe_base64.patch
+sipwise/Move-pv_xavp_name_t-declaration-to-pvar.h.patch
+sipwise/avpops-allow-xavp-semantics-on-second-parameter.patch
