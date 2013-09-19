@@ -23,6 +23,8 @@ upstream/debug/modules-debugger-add-dbg_pv_dump-config-function.patch
 upstream/debug/reset_msgid.patch
 upstream/websocket.patch
 upstream/uac_redirect-get_redirect-check-reason-value-before-.patch
+upstream/avpops-allow-use-of-avps-as-second-parameter-on-re-o.patch
+upstream/avops-use-pv_cache_get-instead-of-pv_parse_spec.patch
 no_lib64_on_64_bits.patch
 no_INSTALL_file.patch
 fix_export.patch
