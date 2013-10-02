@@ -5424,14 +5424,15 @@
 +int get_via_branch(struct sip_msg *, int, str *);
 +
 +#endif
---- a/Makefile.groups
-+++ b/Makefile.groups
-@@ -13,7 +13,7 @@
- 				   mediaproxy mi_datagram mi_fifo mi_rpc mqueue \
- 				   nat_traversal nathelper path pike pv ratelimit rr rtimer \
- 				   rtpproxy sanity sdpops siputils sl statistics textops \
--				   textopsx tm tmx topoh xlog
-+				   textopsx tm tmx topoh xlog rtpproxy-ng
+--- a/Makefile
++++ b/Makefile
+@@ -135,7 +135,8 @@
+ 				eval exec fifo db_flatstore gflags maxfwd mediaproxy \
+ 				nathelper options pdt permissions pike print ratelimit \
+ 				registrar rr rtpproxy sanity sl textops timer tm uac \
+-				unixsock uri usrloc xlog cfg_rpc sipcapture msrp tmrec
++				unixsock uri usrloc xlog cfg_rpc sipcapture msrp tmrec \
++				rtpproxy-ng
  
- # - extra used modules, with no extra dependency
- mod_list_extra=avp auth_diameter call_control dmq domainpolicy msrp pdb qos \
+ # Modules in this group are considered a standard part of SER (due to 
+ # widespread usage) but they have dependencies that must be satisfied for 

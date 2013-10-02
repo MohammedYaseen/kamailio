@@ -1,5 +1,5 @@
---- a/modules/nathelper/nathelper.c
-+++ b/modules/nathelper/nathelper.c
+--- a/modules_k/nathelper/nathelper.c
++++ b/modules_k/nathelper/nathelper.c
 @@ -339,6 +339,7 @@
  static char *force_socket_str = 0;
  static pid_t mypid;
