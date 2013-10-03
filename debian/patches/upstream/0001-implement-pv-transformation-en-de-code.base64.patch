@@ -18,7 +18,7 @@ Subject: [PATCH] implement pv transformation {en,de}code.base64
  
  #include "../../parser/parse_param.h"
  #include "../../parser/parse_uri.h"
-@@ -230,6 +231,32 @@
+@@ -204,6 +205,32 @@
  			val->rs.s = _tr_buffer;
  			val->rs.len = i;
  			break;
@@ -51,9 +51,9 @@ Subject: [PATCH] implement pv transformation {en,de}code.base64
  		case TR_S_ESCAPECOMMON:
  			if(!(val->flags&PV_VAL_STR))
  				val->rs.s = int2str(val->ri, &val->rs.len);
-@@ -1754,6 +1781,12 @@
- 	} else if(name.len==16 && strncasecmp(name.s, "decode.base64url", 16)==0) {
- 		t->subtype = TR_S_DECODEBASE64URL;
+@@ -1722,6 +1749,12 @@
+ 	} else if(name.len==11 && strncasecmp(name.s, "decode.hexa", 11)==0) {
+ 		t->subtype = TR_S_DECODEHEXA;
  		goto done;
 +	} else if(name.len==11 && strncasecmp(name.s, "encode.base64", 13)==0) {
 +		t->subtype = TR_S_ENCODEBASE64;
@@ -64,3 +64,13 @@ Subject: [PATCH] implement pv transformation {en,de}code.base64
  	} else if(name.len==13 && strncasecmp(name.s, "escape.common", 13)==0) {
  		t->subtype = TR_S_ESCAPECOMMON;
  		goto done;
+--- a/modules_k/pv/pv_trans.h
++++ b/modules_k/pv/pv_trans.h
+@@ -37,6 +37,7 @@
+ enum _tr_s_subtype { 
+ 	TR_S_NONE=0, TR_S_LEN, TR_S_INT, TR_S_MD5, TR_S_SUBSTR,
+ 	TR_S_SELECT, TR_S_ENCODEHEXA, TR_S_DECODEHEXA,
++	TR_S_ENCODEBASE64, TR_S_DECODEBASE64,
+ 	TR_S_ESCAPECOMMON, TR_S_UNESCAPECOMMON, TR_S_ESCAPEUSER, TR_S_UNESCAPEUSER,
+ 	TR_S_ESCAPEPARAM, TR_S_UNESCAPEPARAM, TR_S_TOLOWER, TR_S_TOUPPER,
+ 	TR_S_STRIP, TR_S_STRIPTAIL, TR_S_PREFIXES, TR_S_PREFIXES_QUOT, TR_S_REPLACE,

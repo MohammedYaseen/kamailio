@@ -84,8 +84,8 @@
 +	if (pcre_exec(rule->subst_comp, NULL, string.s, string.len,
 +			0, 0, ovector, 3 * (MAX_REPLACE_WITH + 1)) <= 0) {
 +		LM_ERR("the string %.*s matched "
-+			"the match_exp %.*s but not the subst_exp %.*s!\n", 
-+			string.len, string.s, 
++			"the match_exp %.*s but not the subst_exp %.*s!\n",
++			string.len, string.s,
 +			rule->match_exp.len, rule->match_exp.s,
 +			rule->subst_exp.len, rule->subst_exp.s);
 +		return -1;
@@ -130,7 +130,7 @@
 +		while( repl_nb < repl_comp->n_escapes){
 +
 +			token = repl_comp->replace[repl_nb];
-+			
++
 +			if(offset< token.offset){
 +				if((repl_comp->replacement.len < offset)||
 +					(result->len + token.offset -offset >= MAX_PHONE_NB_DIGITS)){
@@ -153,7 +153,7 @@
 -				offset += token.size;
 +			switch(token.type) {
 +				case REPLACE_NMATCH:
-+					/*copy from the match subexpression*/	
++					/*copy from the match subexpression*/
 +					match_nb = token.u.nmatch * 2;
 +					match.s =  string.s + ovector[match_nb];
 +					match.len = ovector[match_nb + 1] - ovector[match_nb];
@@ -191,7 +191,7 @@
 -			case REPLACE_URI:	
 -				if ( msg== NULL || msg->first_line.type!=SIP_REQUEST){
 -					LM_CRIT("uri substitution attempt on no request"
-+				case REPLACE_URI:	
++				case REPLACE_URI:
 +					if ( msg== NULL || msg->first_line.type!=SIP_REQUEST){
 +						LM_CRIT("uri substitution attempt on no request"
  							" message\n");

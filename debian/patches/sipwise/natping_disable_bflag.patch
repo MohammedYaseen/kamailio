@@ -24,7 +24,7 @@
  
  		/* set reply function if SIP natping is enabled */
  		if (sipping_flag) {
-@@ -1731,6 +1734,9 @@
+@@ -1736,6 +1739,9 @@
  		path.s = path.len ? ((char*)cp + sizeof(path.len)) : NULL ;
  		cp =  (char*)cp + sizeof(path.len) + path.len;
  

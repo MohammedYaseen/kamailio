@@ -9,9 +9,9 @@ Subject: [PATCH] fix string length matching
 
 --- a/modules_k/pv/pv_trans.c
 +++ b/modules_k/pv/pv_trans.c
-@@ -1781,10 +1781,10 @@
- 	} else if(name.len==16 && strncasecmp(name.s, "decode.base64url", 16)==0) {
- 		t->subtype = TR_S_DECODEBASE64URL;
+@@ -1749,10 +1749,10 @@
+ 	} else if(name.len==11 && strncasecmp(name.s, "decode.hexa", 11)==0) {
+ 		t->subtype = TR_S_DECODEHEXA;
  		goto done;
 -	} else if(name.len==11 && strncasecmp(name.s, "encode.base64", 13)==0) {
 +	} else if(name.len==13 && strncasecmp(name.s, "encode.base64", 13)==0) {

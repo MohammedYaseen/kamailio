@@ -60,7 +60,7 @@
 +	struct timezone tz;
 +	struct tm      *tm;
 +	uint64_t        time_hires;
-+ 
++
 +	gettimeofday(&tv, &tz);
 +	tm = localtime(&tv.tv_sec);
 +

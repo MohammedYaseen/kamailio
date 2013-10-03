@@ -14,11 +14,9 @@ Subject: [PATCH] attempt to fix segfault due to recursive mysql query
  modules/db_mysql/km_row.c    |    5 +++--
  8 files changed, 68 insertions(+), 29 deletions(-)
 
-diff --git a/lib/srdb1/db_res.h b/lib/srdb1/db_res.h
-index 82734b3..aaaec6d 100644
 --- a/lib/srdb1/db_res.h
 +++ b/lib/srdb1/db_res.h
-@@ -61,6 +61,7 @@ typedef struct db1_res {
+@@ -61,6 +61,7 @@
  	int n;                 /**< Number of rows in current fetch */
  	int res_rows;          /**< Number of total rows in query   */
  	int last_row;          /**< Last row                        */
@@ -26,7 +24,7 @@ index 82734b3..aaaec6d 100644
  } db1_res_t;
  
  
-@@ -78,6 +79,8 @@ typedef struct db1_res {
+@@ -78,6 +79,8 @@
  #define RES_LAST_ROW(re)  ((re)->last_row)
  /** Return the number of total result rows */
  #define RES_NUM_ROWS(re) ((re)->res_rows)
@@ -35,11 +33,9 @@ index 82734b3..aaaec6d 100644
  
  
  /**
-diff --git a/modules/db_mysql/km_dbase.c b/modules/db_mysql/km_dbase.c
-index 208f64e..569880f 100644
 --- a/modules/db_mysql/km_dbase.c
 +++ b/modules/db_mysql/km_dbase.c
-@@ -163,14 +163,14 @@ static int db_mysql_store_result(const db1_con_t* _h, db1_res_t** _r)
+@@ -163,14 +163,14 @@
  		return -1;
  	}
  
@@ -57,7 +53,7 @@ index 208f64e..569880f 100644
  		if (mysql_field_count(CON_CONNECTION(_h)) == 0) {
  			(*_r)->col.n = 0;
  			(*_r)->n = 0;
-@@ -181,7 +181,7 @@ static int db_mysql_store_result(const db1_con_t* _h, db1_res_t** _r)
+@@ -181,7 +181,7 @@
  			if (code == CR_SERVER_GONE_ERROR || code == CR_SERVER_LOST) {
  				counter_inc(mysql_cnts_h.driver_err);
  			}
@@ -66,7 +62,7 @@ index 208f64e..569880f 100644
  			*_r = 0;
  			return -3;
  		}
-@@ -195,14 +195,14 @@ static int db_mysql_store_result(const db1_con_t* _h, db1_res_t** _r)
+@@ -195,14 +195,14 @@
  		/* all mem on openser API side is already freed by
  		 * db_mysql_convert_result in case of error, but we also need
  		 * to free the mem from the mysql lib side */
@@ -83,7 +79,7 @@ index 208f64e..569880f 100644
  		return -4;
  	}
  
-@@ -224,19 +224,21 @@ done:
+@@ -224,19 +224,21 @@
   * \param _r result set that should be freed
   * \return zero on success, negative value on failure
   */
@@ -108,7 +104,7 @@ index 208f64e..569880f 100644
       return 0;
  }
  
-@@ -288,21 +290,21 @@ int db_mysql_fetch_result(const db1_con_t* _h, db1_res_t** _r, const int nrows)
+@@ -288,21 +290,21 @@
  
  	/* exit if the fetch count is zero */
  	if (nrows == 0) {
@@ -134,7 +130,7 @@ index 208f64e..569880f 100644
  			if (mysql_field_count(CON_CONNECTION(_h)) == 0) {
  				(*_r)->col.n = 0;
  				(*_r)->n = 0;
-@@ -313,7 +315,7 @@ int db_mysql_fetch_result(const db1_con_t* _h, db1_res_t** _r, const int nrows)
+@@ -313,7 +315,7 @@
  				if (code == CR_SERVER_GONE_ERROR || code == CR_SERVER_LOST) {
  					counter_inc(mysql_cnts_h.driver_err);
  				}
@@ -143,7 +139,7 @@ index 208f64e..569880f 100644
  				*_r = 0;
  				return -3;
  			}
-@@ -323,7 +325,7 @@ int db_mysql_fetch_result(const db1_con_t* _h, db1_res_t** _r, const int nrows)
+@@ -323,7 +325,7 @@
  			return -4;
  		}
  
@@ -152,7 +148,7 @@ index 208f64e..569880f 100644
  		if (!RES_NUM_ROWS(*_r)) {
  			LM_DBG("no rows returned from the query\n");
  			RES_ROWS(*_r) = 0;
-@@ -362,8 +364,8 @@ int db_mysql_fetch_result(const db1_con_t* _h, db1_res_t** _r, const int nrows)
+@@ -362,8 +364,8 @@
  	}
  
  	for(i = 0; i < rows; i++) {
@@ -163,11 +159,9 @@ index 208f64e..569880f 100644
  			LM_ERR("driver error: %s\n", mysql_error(CON_CONNECTION(_h)));
  			RES_ROW_N(*_r) = i;
  			db_free_rows(*_r);
-diff --git a/modules/db_mysql/km_dbase.h b/modules/db_mysql/km_dbase.h
-index 3a567f2..2acf517 100644
 --- a/modules/db_mysql/km_dbase.h
 +++ b/modules/db_mysql/km_dbase.h
-@@ -57,7 +57,7 @@ void db_mysql_close(db1_con_t* _h);
+@@ -57,7 +57,7 @@
  /*! \brief
   * Free all memory allocated by get_result
   */
@@ -176,11 +170,9 @@ index 3a567f2..2acf517 100644
  
  
  /*! \brief
-diff --git a/modules/db_mysql/km_my_con.c b/modules/db_mysql/km_my_con.c
-index ce20be2..646d74b 100644
 --- a/modules/db_mysql/km_my_con.c
 +++ b/modules/db_mysql/km_my_con.c
-@@ -144,7 +144,6 @@ void db_mysql_free_connection(struct pool_con* con)
+@@ -144,7 +144,6 @@
  
  	_c = (struct my_con*) con;
  
@@ -188,11 +180,9 @@ index ce20be2..646d74b 100644
  	if (_c->id) free_db_id(_c->id);
  	if (_c->con) {
  		mysql_close(_c->con);
-diff --git a/modules/db_mysql/km_my_con.h b/modules/db_mysql/km_my_con.h
-index 2624f34..3d71d00 100644
 --- a/modules/db_mysql/km_my_con.h
 +++ b/modules/db_mysql/km_my_con.h
-@@ -44,9 +44,7 @@ struct my_con {
+@@ -44,9 +44,7 @@
  	unsigned int ref;        /*!< Reference count */
  	struct pool_con* next;   /*!< Next connection in the pool */
  
@@ -202,7 +192,7 @@ index 2624f34..3d71d00 100644
  	time_t timestamp;        /*!< Timestamp of last query */
  };
  
-@@ -54,9 +52,7 @@ struct my_con {
+@@ -54,9 +52,7 @@
  /*
   * Some convenience wrappers
   */
@@ -212,11 +202,9 @@ index 2624f34..3d71d00 100644
  #define CON_TIMESTAMP(db_con)  (((struct my_con*)((db_con)->tail))->timestamp)
  
  
-diff --git a/modules/db_mysql/km_res.c b/modules/db_mysql/km_res.c
-index 10d3ce2..965e6dc 100644
 --- a/modules/db_mysql/km_res.c
 +++ b/modules/db_mysql/km_res.c
-@@ -73,7 +73,7 @@ int db_mysql_get_columns(const db1_con_t* _h, db1_res_t* _r)
+@@ -73,7 +73,7 @@
  		return -3;
  	}
  
@@ -225,7 +213,7 @@ index 10d3ce2..965e6dc 100644
  	for(col = 0; col < RES_COL_N(_r); col++) {
  		RES_NAMES(_r)[col] = (str*)pkg_malloc(sizeof(str));
  		if (! RES_NAMES(_r)[col]) {
-@@ -164,7 +164,7 @@ static inline int db_mysql_convert_rows(const db1_con_t* _h, db1_res_t* _r)
+@@ -164,7 +164,7 @@
  		return -1;
  	}
  
@@ -234,7 +222,7 @@ index 10d3ce2..965e6dc 100644
  	if (!RES_ROW_N(_r)) {
  		LM_DBG("no rows returned from the query\n");
  		RES_ROWS(_r) = 0;
-@@ -177,8 +177,8 @@ static inline int db_mysql_convert_rows(const db1_con_t* _h, db1_res_t* _r)
+@@ -177,8 +177,8 @@
  	}
  
  	for(row = 0; row < RES_ROW_N(_r); row++) {
@@ -245,7 +233,7 @@ index 10d3ce2..965e6dc 100644
  			LM_ERR("driver error: %s\n", mysql_error(CON_CONNECTION(_h)));
  			RES_ROW_N(_r) = row;
  			db_free_rows(_r);
-@@ -221,3 +221,22 @@ int db_mysql_convert_result(const db1_con_t* _h, db1_res_t* _r)
+@@ -221,3 +221,22 @@
  	return 0;
  }
  
@@ -268,8 +256,6 @@ index 10d3ce2..965e6dc 100644
 +	}
 +	return obj;
 +}
-diff --git a/modules/db_mysql/km_res.h b/modules/db_mysql/km_res.h
-index 957a961..0b063d8 100644
 --- a/modules/db_mysql/km_res.h
 +++ b/modules/db_mysql/km_res.h
 @@ -37,6 +37,18 @@
@@ -291,7 +277,7 @@ index 957a961..0b063d8 100644
  /*!
   * \brief Fill the result structure with data from database
   * \param _h database connection
-@@ -54,4 +66,11 @@ int db_mysql_convert_result(const db1_con_t* _h, db1_res_t* _r);
+@@ -54,4 +66,11 @@
   */
  int db_mysql_get_columns(const db1_con_t* _h, db1_res_t* _r);
  
@@ -303,8 +289,6 @@ index 957a961..0b063d8 100644
 +db1_res_t* db_mysql_new_result(void);
 +
  #endif
-diff --git a/modules/db_mysql/km_row.c b/modules/db_mysql/km_row.c
-index 42f2841..9f2c730 100644
 --- a/modules/db_mysql/km_row.c
 +++ b/modules/db_mysql/km_row.c
 @@ -36,6 +36,7 @@
@@ -315,7 +299,7 @@ index 42f2841..9f2c730 100644
  
  /*!
   * \brief Convert a row from result into DB API representation
-@@ -59,11 +60,11 @@ int db_mysql_convert_row(const db1_con_t* _h, db1_res_t* _res, db_row_t* _r)
+@@ -59,11 +60,11 @@
  		return -2;
  	}
  	
@@ -329,6 +313,3 @@ index 42f2841..9f2c730 100644
  			LM_ERR("failed to convert value\n");
  			LM_DBG("free row at %p\n", _r);
  			db_free_row(_r);
--- 
-1.7.10.4
-
