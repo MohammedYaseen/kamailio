@@ -50,7 +50,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, python, adduser
 Conflicts: kamailio,
            kamailio-regex-modules,
            ngcp-system-tools-ce (<< 0.6.0),
-           ngcp-system-tools-pro (<< 0.6.0
+           ngcp-system-tools-pro (<< 0.6.0)
 Replaces: kamailio
 Suggests: ngcp-kamailio-berkeley-modules,
  ngcp-kamailio-carrierroute-modules,
