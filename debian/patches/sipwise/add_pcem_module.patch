@@ -1,5 +1,3 @@
-diff --git a/Makefile b/Makefile
-index aa41e71..72a29d3 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -170,7 +170,7 @@
@@ -29,9 +27,6 @@ index aa41e71..72a29d3 100644
  							dialplan lcr utils presence presence_mwi \
  							presence_dialoginfo presence_xml pua pua_bla \
  							pua_dialoginfo pua_usrloc pua_xmpp \
-diff --git a/modules_k/pcem/Makefile b/modules_k/pcem/Makefile
-new file mode 100644
-index 0000000..3ab8f8f
 --- /dev/null
 +++ b/modules_k/pcem/Makefile
 @@ -0,0 +1,18 @@
@@ -53,15 +48,12 @@ index 0000000..3ab8f8f
 +SER_LIBS+=$(SERLIBPATH)/srdb1/srdb1 $(SERLIBPATH)/kcore/kcore
 +
 +include ../../Makefile.modules
-diff --git a/modules_k/pcem/pcem_logic.c b/modules_k/pcem/pcem_logic.c
-new file mode 100644
-index 0000000..1d7607a
 --- /dev/null
 +++ b/modules_k/pcem/pcem_logic.c
 @@ -0,0 +1,130 @@
 +/*
 + * $Id$
-+ * 
++ *
 + * PacketCable Event Messages module
 + *
 + * Copyright (C) 2012 Sipwise GmbH
@@ -116,7 +108,7 @@ index 0000000..1d7607a
 +		return -1;
 +	}
 +*/
-+	return 0;	
++	return 0;
 +}
 +
 +void pcem_onreq( struct cell* t, int type, struct tmcb_params *ps )
@@ -134,7 +126,7 @@ index 0000000..1d7607a
 +			return;
 +
 +		is_invite = (ps->req->REQ_METHOD==METHOD_INVITE)?1:0;
-+	
++
 +		tmcb_types =
 +			/* get completed transactions */
 +			TMCB_RESPONSE_OUT |
@@ -189,9 +181,6 @@ index 0000000..1d7607a
 +	}
 +}
 +
-diff --git a/modules_k/pcem/pcem_logic.h b/modules_k/pcem/pcem_logic.h
-new file mode 100644
-index 0000000..9f6a97a
 --- /dev/null
 +++ b/modules_k/pcem/pcem_logic.h
 @@ -0,0 +1,34 @@
@@ -229,15 +218,12 @@ index 0000000..9f6a97a
 +void pcem_onreq( struct cell* t, int type, struct tmcb_params *ps );
 +
 +#endif
-diff --git a/modules_k/pcem/pcem_mod.c b/modules_k/pcem/pcem_mod.c
-new file mode 100644
-index 0000000..0d0ea2c
 --- /dev/null
 +++ b/modules_k/pcem/pcem_mod.c
 @@ -0,0 +1,153 @@
 +/*
 + * $Id$
-+ * 
++ *
 + * PacketCable Event Messages module
 + *
 + * Copyright (C) 2012 Sipwise GmbH
@@ -335,12 +321,12 @@ index 0000000..0d0ea2c
 +
 +static int mod_init( void )
 +{
-+	if ((pcem_qos_flag != -1) && 
++	if ((pcem_qos_flag != -1) &&
 +		!flag_in_range(pcem_qos_flag)) {
 +		LM_ERR("pcem_qos_flag set to invalid value\n");
 +		return -1;
 +	}
-+	if ((pcem_all_flag != -1) && 
++	if ((pcem_all_flag != -1) &&
 +		!flag_in_range(pcem_all_flag)) {
 +		LM_ERR("pcem_all_flag set to invalid value\n");
 +		return -1;
@@ -388,9 +374,6 @@ index 0000000..0d0ea2c
 +{
 +}
 +
-diff --git a/modules_k/pcem/pcem_mod.h b/modules_k/pcem/pcem_mod.h
-new file mode 100644
-index 0000000..167fd30
 --- /dev/null
 +++ b/modules_k/pcem/pcem_mod.h
 @@ -0,0 +1,33 @@
