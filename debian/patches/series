@@ -6,6 +6,7 @@ upstream/0002-fix-string-length-matching.patch
 upstream/0001-attempt-to-fix-segfault-due-to-recursive-mysql-query.patch
 upstream/0001-backport-c70f884988c3f9298fa4d40ef12c69eea9da26a5-fr.patch
 sipwise/do-not-install-default-config.patch
+sipwise/corex_module.patch
 sipwise/accounting_time_precision.patch
 sipwise/dialplan_regexp_subst.patch
 sipwise/unforce_rtp_proxy_one_param.patch
